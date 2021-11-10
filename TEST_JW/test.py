@@ -33,8 +33,14 @@ def easy_ocr_result(img, language='en', draw=True, text=False):
     for (bbox, text, prob) in results:
         # display the OCR'd text and associated probability
         # print("[INFO] {:.4f}: {}".format(prob, text))
+        (tl, tr, br, bl) = bbox
+        tl = (int(tl[0]), int(tl[1]))
+        tr = (int(tr[0]), int(tr[1]))
+        br = (int(br[0]), int(br[1]))
+        bl = (int(bl[0]), int(bl[1]))
 
-        bbox_list.append(bbox)
+            
+        bbox_list.append((tl, tr, br, bl))
         text_list.append(text)
 
     return np.array(bbox_list), text_list
