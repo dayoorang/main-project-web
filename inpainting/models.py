@@ -23,13 +23,22 @@ class Image(models.Model):
     def save(self, *args, **kwargs):
         # 이미지 열기
 
-        img_pil = PIL.Image.open(self.image)
-        bbox_list, text_list = easy_ocr_result(img_pil)
-        tranlated_texts = translate_texts(texts=text_list, type='naver')
 
-        # numpy img
+        img_pil = PIL.Image.open(self.image).convert('RGB') # 4channel 들어올경우 -> 3channl 
+
 
         img_np = np.array(img_pil)
+
+        # # 3차원으로 변경
+        # img_np = cv2.imread(img_pil, cv2.IMREAD_COLOR)
+
+        print('img_np shape', img_np.shape)
+        bbox_list, text_list = easy_ocr_result(img_np)
+
+        tranlated_texts = translate_texts(texts=text_list, type='naver')
+
+
+    
         for bbox in bbox_list:
             img_cut = cut_image(img_np, bbox)
         
@@ -40,6 +49,9 @@ class Image(models.Model):
         img_pil = PIL.Image.fromarray(img_np)
         # print('type',type(img_pil))
         img = rewrite(img_pil, tranlated_texts,bbox_list)
+
+        # print(img)
+        # print(type(img))
         #  convert back to pil image
         # im_pil = Image.fromarray(img)
         # plt.imshow(img)

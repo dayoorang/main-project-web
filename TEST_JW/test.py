@@ -24,7 +24,7 @@ def easy_ocr_result(img, language='en', draw=True, text=False):
     reader = easyocr.Reader([language])
     print('img type',type(img))
     results = reader.readtext(img)
-
+    print('results',results)
     # 바운딩박스 리스트
     bbox_list = []
     # 텍스트 리스트
@@ -34,7 +34,14 @@ def easy_ocr_result(img, language='en', draw=True, text=False):
         # display the OCR'd text and associated probability
         # print("[INFO] {:.4f}: {}".format(prob, text))
 
-        bbox_list.append(bbox)
+        (tl, tr, br, bl) = bbox
+        tl = (int(tl[0]), int(tl[1]))
+        tr = (int(tr[0]), int(tr[1]))
+        br = (int(br[0]), int(br[1]))
+        bl = (int(bl[0]), int(bl[1]))
+
+            
+        bbox_list.append((tl, tr, br, bl))
         text_list.append(text)
 
     return np.array(bbox_list), text_list
