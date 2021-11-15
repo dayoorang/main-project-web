@@ -13,6 +13,7 @@ from TEST_JW.test import (
     cut_image,
     mask_image,
     change_original,
+    change_color,
     rewrite,
 )
 
@@ -38,17 +39,20 @@ class Image(models.Model):
         tranlated_texts = translate_texts(texts=text_list, type='naver')
 
 
-    
+        color_list=[]
         for bbox in bbox_list:
             img_cut = cut_image(img_np, bbox)
-        
+
+            color_list.append(change_color(img_cut))
+
             mask = mask_image(img_cut)
             masked_img = cv2.inpaint(img_cut, mask, 3, cv2.INPAINT_TELEA)
             img_np = change_original(img_np,masked_img, bbox)
+        print('color list',color_list)
 
         img_pil = PIL.Image.fromarray(img_np)
         # print('type',type(img_pil))
-        img = rewrite(img_pil, tranlated_texts,bbox_list)
+        img = rewrite(img_pil, tranlated_texts,bbox_list, color_list)
 
         # print(img)
         # print(type(img))

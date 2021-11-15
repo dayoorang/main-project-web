@@ -33,10 +33,6 @@ def easy_ocr_result(img, language='en', draw=True, text=False):
     for (bbox, text, prob) in results:
         # display the OCR'd text and associated probability
         # print("[INFO] {:.4f}: {}".format(prob, text))
-<<<<<<< HEAD
-
-=======
->>>>>>> be36fe164d961fe7a3ce0645214e50bfbed8b8ba
         (tl, tr, br, bl) = bbox
         tl = (int(tl[0]), int(tl[1]))
         tr = (int(tr[0]), int(tr[1]))
@@ -134,14 +130,28 @@ def decsion_font_size( bbox_hi, text):
         _, hi = title_font.getsize(text)
     return font_size
 
+def change_color(img):
+    img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY) # gray 영상으로 만들기
+    ret, img_binary = cv2.threshold(img_gray, 0, 255, cv2.THRESH_OTSU) # 마스킹
 
-def rewrite(img, tranlated_texts ,bbox_list):
+    if len(img_binary[img_binary > 250]) > len(img_binary[img_binary < 250]): 
+        img_binary = cv2.bitwise_not(img_binary)
+
+    masked = cv2.bitwise_and(img, img, mask = img_binary)
+
+
+    b, g, r = cv2.split(masked)
+    b, g, r = int(np.mean(b[b > 0])), int(np.mean(g[g > 0])), int(np.mean(r[r > 0]))
+
+    return b,g,r
+
+def rewrite(img, tranlated_texts ,bbox_list, color_list):
 
     img = img
     image_editable = ImageDraw.Draw(img)
 
     # (x, y ) , ( 237, 230, 211) 색감
-    for idx, bbox in enumerate(bbox_list):      
+    for idx, (bbox,color) in enumerate(zip(bbox_list,color_list)):      
         text = tranlated_texts[idx]
         title_font = ImageFont.truetype('ttf/NotoSansKR-Bold.otf', 1)
         wi, _ = title_font.getsize(text)
@@ -150,7 +160,7 @@ def rewrite(img, tranlated_texts ,bbox_list):
 
         font_size = decsion_font_size(bbox_hi, text)
         title_font = ImageFont.truetype('ttf/NotoSansKR-Bold.otf', font_size)
-        image_editable.text((bbox[0][0], bbox[0][1]), text, (255,255,255), anchor = 'lt', font=title_font)
+        image_editable.text((bbox[0][0], bbox[0][1]), text, color, anchor = 'lt', font=title_font)
 
     return img
     

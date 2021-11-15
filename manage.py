@@ -2,7 +2,7 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
-
+os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
 
 def main():
     """Run administrative tasks."""
