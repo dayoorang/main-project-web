@@ -48,6 +48,15 @@ def easy_ocr_result(img, language='en', draw=True, text=False):
 
 def translate_texts(texts: List[str], type='google') -> List[str]:
     global tranlated_texts
+
+    # text_no = len(texts)    
+
+    # if type == 'google':
+    #     translator = googletrans.Translator()
+    #     tranlated_texts = [
+    #         translator.translate(text=text, src='en', dest='ko').text
+    #         for text in texts
+    #     ]
     if type == 'google':
         translator = googletrans.Translator()
         tranlated_texts = [
@@ -105,8 +114,7 @@ def mask_image(img2):
 
     kernel = np.ones((3, 3), np.uint8)
     mask = cv2.dilate(mask, kernel, iterations=2)
-    # plt.imshow(mask)
-    # plt.show()
+
     return mask
 
 
@@ -143,6 +151,28 @@ def change_color(img):
     b, g, r = cv2.split(masked)
     b, g, r = int(np.mean(b[b > 0])), int(np.mean(g[g > 0])), int(np.mean(r[r > 0]))
 
+    return b,g,r
+
+def change_bg_color(img):
+
+    img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY) # gray 영상으로 만들기
+    ret, img_binary = cv2.threshold(img_gray, 0, 255, cv2.THRESH_OTSU) # 마스킹
+    bg_binary = cv2.bitwise_not(img_binary)
+
+    if len(img_binary[img_binary > 250]) > len(img_binary[img_binary < 250]): 
+        bg_binary = cv2.bitwise_not(bg_binary)
+
+    masked_bg = cv2.bitwise_and(img, img, mask = bg_binary)
+
+    b, g, r = cv2.split(masked_bg)
+    b, g, r = int(np.mean(b[b > 0])), int(np.mean(g[g > 0])), int(np.mean(r[r > 0]))
+    
+    a = np.ones(shape=img.shape, dtype = np.uint8)
+    b = a[:,:,0] * b
+    g = a[:,:,1] * g
+    r = a[:,:,2] * r
+
+    
     return b,g,r
 
 def rewrite(img, tranlated_texts ,bbox_list, color_list):

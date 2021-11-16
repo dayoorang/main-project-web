@@ -15,6 +15,7 @@ from TEST_JW.test import (
     change_original,
     change_color,
     rewrite,
+    change_bg_color,
 )
 
 
@@ -40,14 +41,23 @@ class Image(models.Model):
 
 
         color_list=[]
+        
         for bbox in bbox_list:
             img_cut = cut_image(img_np, bbox)
 
             color_list.append(change_color(img_cut))
 
-            mask = mask_image(img_cut)
-            masked_img = cv2.inpaint(img_cut, mask, 3, cv2.INPAINT_TELEA)
-            img_np = change_original(img_np,masked_img, bbox)
+            # mask = mask_image(img_cut)
+            # masked_img = cv2.inpaint(img_cut, mask, 3, cv2.INPAINT_TELEA)
+            print('img_cut shape',img_cut.shape)
+            b,g,r = change_bg_color(img_cut)
+            print(b.shape)
+            img_cut[:,:,0] = b
+            img_cut[:,:,1] = g
+            img_cut[:,:,2] = r
+
+            img_np = change_original(img_np, img_cut, bbox)
+
         print('color list',color_list)
 
         img_pil = PIL.Image.fromarray(img_np)
