@@ -97,7 +97,7 @@ def rgb(img):
 
     # 수정필요함 (귀퉁이 4개중 2개 이상이 흰색이면 이런식으로 )
     flat_list = list(mask.ravel())
-    if flat_list.count(0) > len(flat_list):
+    if flat_list.count(0) > len(flat_list)/2:
         return 0
 
 def mask_image(img2):
