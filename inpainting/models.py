@@ -71,6 +71,7 @@ class Image(models.Model):
         # plt.imshow(img)
         # plt.show()
         # 저장
+        
         buffer = BytesIO()
         img.save(buffer, format='png')
         image_png = buffer.getvalue()

@@ -128,7 +128,7 @@ def change_original(img_np,masked_img, bbox):
     return img_np
 
 
-def decsion_font_size( bbox_hi, text):
+def decsion_font_size(bbox_hi, text):
     font_size = 1
     title_font = ImageFont.truetype('ttf/NotoSansKR-Bold.otf', font_size)
     _, hi = title_font.getsize(text)
@@ -176,21 +176,37 @@ def change_bg_color(img):
     return b,g,r
 
 def rewrite(img, tranlated_texts ,bbox_list, color_list):
-
     img = img
     image_editable = ImageDraw.Draw(img)
 
-    # (x, y ) , ( 237, 230, 211) 색감
-    for idx, (bbox,color) in enumerate(zip(bbox_list,color_list)):      
+    ### font size ###
+    bbox_hi = []
+    for bbox in  bbox_list:
+        bbox_hi.append(bbox[2][1] - bbox[0][1]) 
+
+    bbox_hi_median = int(np.median(bbox_hi))
+    bbox_hi_median_diff = np.abs(np.array(bbox_hi) - bbox_hi_median ) # 절대값 추출
+    
+    hi_lt_idx = np.where(bbox_hi_median_diff < 5) # 5보다 적게나는 값 idx 추출
+
+    # bbox_hi > array 변경
+    bbox_hi = np.array(bbox_hi)
+
+    # 차이 작은 값은 median값으로 변경 큰것은 그대로.
+    bbox_hi[hi_lt_idx] = bbox_hi_median
+
+
+    for idx, (bbox,color) in enumerate(zip(bbox_list,color_list)):  
+          
+
         text = tranlated_texts[idx]
         title_font = ImageFont.truetype('ttf/NotoSansKR-Bold.otf', 1)
         wi, _ = title_font.getsize(text)
-        # bbox_wi = bbox[1][0] - bbox[0][0]
-        bbox_hi = bbox[2][1] - bbox[1][1]
-
-        font_size = decsion_font_size(bbox_hi, text)
-        title_font = ImageFont.truetype('ttf/NotoSansKR-Bold.otf', font_size)
+        # bbox_hi = bbox[2][1] - bbox[1][1]
+        # font_size = decsion_font_size(bbox_hi, text)
+        title_font = ImageFont.truetype('ttf/NotoSansKR-Bold.otf', bbox_hi[idx])
         image_editable.text((bbox[0][0], bbox[0][1]), text, color, anchor = 'lt', font=title_font)
+
 
     return img
     
