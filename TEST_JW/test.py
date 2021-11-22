@@ -186,8 +186,8 @@ def rewrite(img, tranlated_texts ,bbox_list, color_list):
 
     bbox_hi_median = int(np.median(bbox_hi))
     bbox_hi_median_diff = np.abs(np.array(bbox_hi) - bbox_hi_median ) # 절대값 추출
-    
-    hi_lt_idx = np.where(bbox_hi_median_diff < 5) # 5보다 적게나는 값 idx 추출
+    print('bbox_hi_median',bbox_hi_median)
+    hi_lt_idx = np.where(bbox_hi_median_diff < 10) # 10보다 적게나는 값 idx 추출
 
     # bbox_hi > array 변경
     bbox_hi = np.array(bbox_hi)
@@ -195,16 +195,17 @@ def rewrite(img, tranlated_texts ,bbox_list, color_list):
     # 차이 작은 값은 median값으로 변경 큰것은 그대로.
     bbox_hi[hi_lt_idx] = bbox_hi_median
 
-
+    print('bbox_hi', bbox_hi)
     for idx, (bbox,color) in enumerate(zip(bbox_list,color_list)):  
           
-
+        print('fontsize',bbox_hi[idx]-15)
         text = tranlated_texts[idx]
-        title_font = ImageFont.truetype('ttf/NotoSansKR-Bold.otf', 1)
+        title_font = ImageFont.truetype("ttf/NotoSansKR-Bold.otf", np.maximum(2, bbox_hi[idx]-10)) # -가 될경우 최소 2로 설정.
         wi, _ = title_font.getsize(text)
-        # bbox_hi = bbox[2][1] - bbox[1][1]
-        # font_size = decsion_font_size(bbox_hi, text)
-        title_font = ImageFont.truetype('ttf/NotoSansKR-Bold.otf', bbox_hi[idx]-15)
+
+        print('bbox_hi[idx]-15', type(bbox_hi[idx]-15))
+        
+        print('title_font',title_font)
         image_editable.text((bbox[0][0], bbox[0][1]), text, color, anchor = 'lt', font=title_font)
 
 
