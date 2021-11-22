@@ -204,7 +204,7 @@ def rewrite(img, tranlated_texts ,bbox_list, color_list):
         wi, _ = title_font.getsize(text)
         # bbox_hi = bbox[2][1] - bbox[1][1]
         # font_size = decsion_font_size(bbox_hi, text)
-        title_font = ImageFont.truetype('ttf/NotoSansKR-Bold.otf', bbox_hi[idx])
+        title_font = ImageFont.truetype('ttf/NotoSansKR-Bold.otf', bbox_hi[idx]-15)
         image_editable.text((bbox[0][0], bbox[0][1]), text, color, anchor = 'lt', font=title_font)
 
 
