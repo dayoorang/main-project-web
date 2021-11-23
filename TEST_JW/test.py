@@ -90,15 +90,14 @@ def cut_image(img, bbox):
     return img
 
 def rgb(img):
-    r1, g1, b1 = img[0][0]
-    r2, g2, b2 = img[-1][0]
-    r3, g3, b3 = img[-1][-1]
-    r4, g4, b4 = img[0][-1]
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    _, mask = cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY)
+
     # 배경이 밝은 부분이 한 부분이라도 있으면
-    ##
+
     # 수정필요함 (귀퉁이 4개중 2개 이상이 흰색이면 이런식으로 )
-    if (r1>=0 and g1>150 and b1>150) or (r2>150 and g2>=0 and b2>150)\
-            or (r3>150 and g3>150 and b3>=0) or (r4>150 and g4>150 and b4>150):
+    flat_list = list(mask.ravel())
+    if flat_list.count(0) > len(flat_list)/2:
         return 0
 
 def mask_image(img2):
@@ -199,16 +198,18 @@ def rewrite(img, tranlated_texts ,bbox_list, color_list):
           
         print('fontsize',bbox_hi[idx]-15)
         text = tranlated_texts[idx]
-        title_font = ImageFont.truetype("ttf/NotoSansKR-Bold.otf", np.maximum(2, bbox_hi[idx]-15)) # -가 될경우 최소 2로 설정.
-        w, h = title_font.getsize(text)
+
+        title_font = ImageFont.truetype("ttf/NotoSansKR-Bold.otf", np.maximum(2, bbox_hi[idx]-10)) # -가 될경우 최소 2로 설정.
+        wi, hi = title_font.getsize(text)
+
         print('bbox_hi[idx]-15', type(bbox_hi[idx]-15))
         
         print('title_font',title_font)
-        image_editable.text((bbox[0][0], bbox[0][1]), text, color, anchor = 'lt', font=title_font)
-
+        start_x = ((bbox[0][0] + bbox[1][0]) // 2  -wi / 2)
+        start_y = ((bbox[0][1] + bbox[2][1]) // 2 - hi / 2)
+        image_editable.text((start_x, start_y), text, color, anchor = 'lt', font=title_font)
 
     return img
-    
     # print('img type',type(img))
 
     # save_rewrite_images(img)
