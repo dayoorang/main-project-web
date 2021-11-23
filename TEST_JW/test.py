@@ -200,16 +200,16 @@ def rewrite(img, tranlated_texts ,bbox_list, color_list):
         print('fontsize',bbox_hi[idx]-15)
         text = tranlated_texts[idx]
         title_font = ImageFont.truetype("ttf/NotoSansKR-Bold.otf", np.maximum(2, bbox_hi[idx]-10)) # -가 될경우 최소 2로 설정.
-        wi, _ = title_font.getsize(text)
+        wi, hi = title_font.getsize(text)
 
         print('bbox_hi[idx]-15', type(bbox_hi[idx]-15))
         
         print('title_font',title_font)
-        image_editable.text((bbox[0][0], bbox[0][1]), text, color, anchor = 'lt', font=title_font)
-
+        start_x = ((bbox[0][0] + bbox[1][0]) // 2  -wi / 2)
+        start_y = ((bbox[0][1] + bbox[2][1]) // 2 - hi / 2)
+        image_editable.text((start_x, start_y), text, color, anchor = 'lt', font=title_font)
 
     return img
-    
     # print('img type',type(img))
 
     # save_rewrite_images(img)
