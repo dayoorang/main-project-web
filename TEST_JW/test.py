@@ -191,7 +191,6 @@ def rewrite(img, tranlated_texts ,bbox_list, color_list):
 
     # bbox_hi > array 변경
     bbox_hi = np.array(bbox_hi)
-
     # 차이 작은 값은 median값으로 변경 큰것은 그대로.
     bbox_hi[hi_lt_idx] = bbox_hi_median
 
@@ -200,9 +199,8 @@ def rewrite(img, tranlated_texts ,bbox_list, color_list):
           
         print('fontsize',bbox_hi[idx]-15)
         text = tranlated_texts[idx]
-        title_font = ImageFont.truetype("ttf/NotoSansKR-Bold.otf", np.maximum(2, bbox_hi[idx]-10)) # -가 될경우 최소 2로 설정.
-        wi, _ = title_font.getsize(text)
-
+        title_font = ImageFont.truetype("ttf/NotoSansKR-Bold.otf", np.maximum(2, bbox_hi[idx]-15)) # -가 될경우 최소 2로 설정.
+        w, h = title_font.getsize(text)
         print('bbox_hi[idx]-15', type(bbox_hi[idx]-15))
         
         print('title_font',title_font)

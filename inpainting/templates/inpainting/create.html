@@ -2,31 +2,55 @@
 {% load static %}
 
 {% block content %}
+<style>
 
- <form method="POST" {% url 'inpaintingapp:create' %} enctype="multipart/form-data">
+    img {
+        border: .5rem solid;
+        border-color:#eb6864;      
+        border-width: 1rem;  
+        max-width: 50rem;
+        max-height: 50rem;
+
+    }
+
+    /* .btnBox{
+        border: .5rem solid;
+        border-color:#eb6864;      
+        border-width: 1rem;  
+   
+
+    } */
+    .bbx {
+ 
+        display: flex; 
+        flex-direction: column; 
+        justify-content: center;
+        align-items: center;
+  
+        
+    }
+
+    
+</style>
+
+ <form method="POST" {% url 'inpaintingapp:create' %} enctype="multipart/form-data" style="height:100vh">
         {% csrf_token %}
-        <!-- <div class="container h-100" style="height: 100vh;">
-            <div class="row text-center card text-white bg-primary align-items-center h-100 " style="max-width: 20rem;">
-                <div class="card-header">Header</div>
-            </div>
-            <div class="row card border-primary  align-items-center" style="max-width: 20rem;">
-                <div class="card-body">
-                <h4 class="card-title">Primary card title</h4>
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+        <div class="container">
+            <div class="bbx">
+                <label class="image-preview spinner-postion" id="imagePreview">
+                    <img src="{% static 'image/upload_image.jpg' %}"
+                            alt="Image Preview"
+                            class="image-preview__image"
+                            style="width: 100%;">
+                        {{ form.image }}
+                </label>
+                <div class="btnBox">
+                    <button  type="submit" class="btn btn-primary btn-lg ">Click</button>
                 </div>
             </div>
-            <div class="container h-100">
-                <div class="row align-items-center h-100">
-                    <div class="col-6 mx-auto">
-                        <div class="jumbotron">
-                            I'm vertically centered
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>  -->
+        </div> 
 
-
+<!-- 
         <div class='card'>
             <div  class="card-body text-success text-center" >
                 <label class="image-preview spinner-postion" id="imagePreview">
@@ -40,7 +64,7 @@
                     <input class="btn btn-outline-success" id="btnFEtch" type="submit" value="Go!">
                 </div>
             </div>
-        </div>
+        </div>  -->
 
     </form>
 
