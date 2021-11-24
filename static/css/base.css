@@ -1,0 +1,37 @@
+
+    img {
+        border: .5rem solid;
+        border-color:#eb6864;      
+        border-width: 1rem;  
+        max-width: 50rem;
+        max-height: 50rem;
+
+    }
+
+
+    .bbx {
+ 
+        display: flex; 
+        flex-direction: column; 
+        justify-content: center;
+        align-items: center;
+        height:100vh;
+  
+        
+    }
+
+    .spinner-div {
+        display:none;
+    }
+    
+    .spinner-div-submit {
+ 
+        display: flex; 
+        flex-direction: row; 
+        justify-content: center;
+        align-items: center;
+        height:100vh;
+  
+        
+    }
+

@@ -1,6 +1,15 @@
-
 {% extends 'base.html' %}
 
 {% block content %}
-    <img src="{{ target_image.image.url }}" alt="result">
+
+
+<div class="container">
+    <div class="bbx">
+        <label class="image-preview spinner-postion" id="imagePreview">
+            <img src="{{ target_image.image.url }}" alt="result" style="min-width: 300px; max-width:500px; border-radius: 1rem;">
+        </label>
+        
+    </div>
+</div> 
+    
 {% endblock %}
